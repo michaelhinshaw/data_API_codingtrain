@@ -1,8 +1,5 @@
 'use strict';
 
-const xlabels = [];
-const ycases = [];
-
 chartIt();
 
 async function chartIt() {
@@ -11,15 +8,15 @@ async function chartIt() {
 
   const chart = new Chart(ctx, {
     // The type of chart we want to create
-    type: 'line',
+    type: 'bar',
 
     // The data for our dataset
     data: {
-      labels: xlabels,
+      labels: data.date,
       datasets: [
         {
           label: 'Positive Covid 19 cases in the United States by Date',
-          data: ycases,
+          data: data.cases,
           fill: false,
           backgroundColor: 'rgb(255, 99, 132)',
           borderColor: 'rgb(255, 99, 132)',
@@ -35,22 +32,31 @@ async function chartIt() {
 async function getData() {
   // const xs = [];
   // const ys = [];
+  let fullData = [];
   const response = await fetch('test.csv');
   const data = await response.text();
 
   const table = data.split('\n').slice();
   table.forEach(row => {
-    const date = row.split(',').slice(4);
-    for (let i = 0; i < date.length; i++) {
-      console.log(date[i]);
-      xlabels.push(date[i]);
+    const caseObjects = row.split(',').slice(4);
+
+    for (let i = 0; i < caseObjects.length; i++) {
+      fullData.push(caseObjects[i]);
+      // xlabels.push(date[i]);
     }
-    const cases = row.split(',').slice(4);
-    for (let j = 0; j < cases.length; j++) {
-      console.log(cases[j]);
-      ycases.push(cases[j]);
-    }
-    console.log(date);
+    // for (let j = 0; j < cases.length; j++) {
+    //   cases.push(caseObjects[j]);
+    // }
+
+    // const cases = row.split(',').slice(4);
+    //   ycases.push(cases[j]);
+
+    // }
+    console.log(fullData);
   });
-  // return { xs, ys };
+  let date = fullData.slice(0, 408);
+  console.log(date);
+  let cases = fullData.slice(409, 816);
+  console.log(cases);
+  return { date, cases };
 }
